@@ -11,9 +11,10 @@ from .objects import Experience, Education, Scraper
 import os
 
 class Person(Scraper):
-    def __init__(self, linkedin_url = None, name = None, experiences = [], educations = [],also_viewed_urls = [],skills = [], driver = None, get = True, login=False , usrn='', pswd='', close_on_complete = True, scrape = True):
+    def __init__(self, linkedin_url = None, name = None,summary = '', experiences = [], educations = [],also_viewed_urls = [],skills = [], driver = None, get = True, login=False , usrn='', pswd='', close_on_complete = True, scrape = True):
         self.linkedin_url = linkedin_url
         self.name = name
+        self.summary = summary
         self.experiences = []
         self.educations = []
         self.also_viewed_urls = []
@@ -78,7 +79,15 @@ class Person(Scraper):
     def scrape_logged_in(self,max_try=10):
         driver = self.driver
         self.name = driver.find_element_by_class_name("pv-top-card-section__name").text.encode('utf-8').strip().decode('utf-8')
-
+        time.sleep(randint(300,1500)/1000.0)
+        _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CSS_SELECTOR, "button.pv-top-card-section__summary-toggle-button")))
+        Sum = driver.find_element_by_css_selector("button.pv-top-card-section__summary-toggle-button")
+        Sum.click()
+        _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CLASS_NAME, "pv-top-card-section__summary-text")))
+        try:
+            self.summary = driver.find_element_by_class_name("pv-top-card-section__summary-text").text
+        except:
+            self.summary = ''
         driver.execute_script("window.scrollTo(0, Math.ceil(document.body.scrollHeight/2));")
 
         _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, "experience-section")))
@@ -215,6 +224,7 @@ class Person(Scraper):
     def get_dict_obj(self):
         dump = {}
         dump['name'] = self.name
+        dump['summary'] = self.summary
         #dump['educations'] = [ {'degree': i.degree, 'institution':i.institution_name,'from_date':i.from_date,'to_date':i.to_date} for i in self.educations]
         dump['educations']  = [i.rawdata for i in self.educations]
         dump['experiences'] = [i.raw_data for i in self.experiences]
