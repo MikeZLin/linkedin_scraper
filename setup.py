@@ -8,7 +8,7 @@ here = path.abspath(path.dirname(__file__))
 
 version = re.search(
     '^__version__\s*=\s*"(.*)"',
-    open('linkedin_scraper/__init__.py').read(),
+    open('LI_scraper/__init__.py').read(),
     re.M
     ).group(1)
 
@@ -17,8 +17,8 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-        name = 'linkedin_scraper',
-        packages = ['linkedin_scraper'], # this must be the same as the name above
+        name = 'LI_scraper',
+        packages = ['LI_scraper'], # this must be the same as the name above
         version = version,
         description = 'Scrapes user data from Linkedin',
         author = 'Joey Sham',

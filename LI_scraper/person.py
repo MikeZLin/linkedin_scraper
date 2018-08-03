@@ -169,7 +169,7 @@ class Person(Scraper):
             for i in exp_data.keys():
                 exp_data[i] = replace_symbols(exp_data[i])
                 if exp_data[i].count('\n') != 0:
-                    exp_data[i] = ','.join(exp_data[i].split('\n')[1:])
+                    exp_data[i] = '<li>'.join(exp_data[i].split('\n')[1:])
 
             self.add_experience(experience)
 
