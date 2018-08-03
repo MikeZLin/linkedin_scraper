@@ -11,12 +11,6 @@ from .objects import Experience, Education, Scraper
 import os
 
 class Person(Scraper):
-    name = None
-    experiences = []
-    skills = []
-    educations = []
-    also_viewed_urls = []
-    linkedin_url = None
     def __init__(self, linkedin_url = None, name = None, experiences = [], educations = [],also_viewed_urls = [],skills = [], driver = None, get = True, login=False , usrn='', pswd='', close_on_complete = True, scrape = True):
         self.linkedin_url = linkedin_url
         self.name = name
