@@ -4,10 +4,10 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from functions import *
+from .functions import *
 import time
 from random import randint
-from objects import Experience, Education, Scraper
+from .objects import Experience, Education, Scraper
 import os
 
 class Person(Scraper):

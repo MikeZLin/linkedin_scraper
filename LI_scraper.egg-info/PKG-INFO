@@ -1,0 +1,12 @@
+Metadata-Version: 1.1
+Name: LI-scraper
+Version: 2.2.0
+Summary: Scrapes user data from Linkedin
+Home-page: https://github.com/joeyism/linkedin_scraper
+Author: Joey Sham
+Author-email: sham.joey@gmail.com
+License: UNKNOWN
+Download-URL: https://github.com/joeyism/linkedin_scraper/dist/2.2.0.tar.gz
+Description: UNKNOWN
+Keywords: linkedin,scraping,scraper
+Platform: UNKNOWN

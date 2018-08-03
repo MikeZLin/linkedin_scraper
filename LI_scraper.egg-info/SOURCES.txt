@@ -1,0 +1,14 @@
+README.rst
+setup.cfg
+setup.py
+LI_scraper/__init__.py
+LI_scraper/company.py
+LI_scraper/functions.py
+LI_scraper/objects.py
+LI_scraper/person.py
+LI_scraper/scraper.py
+LI_scraper.egg-info/PKG-INFO
+LI_scraper.egg-info/SOURCES.txt
+LI_scraper.egg-info/dependency_links.txt
+LI_scraper.egg-info/requires.txt
+LI_scraper.egg-info/top_level.txt
