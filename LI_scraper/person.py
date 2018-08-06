@@ -80,14 +80,20 @@ class Person(Scraper):
         driver = self.driver
         self.name = driver.find_element_by_class_name("pv-top-card-section__name").text.encode('utf-8').strip().decode('utf-8')
         time.sleep(randint(300,1500)/1000.0)
-        _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CSS_SELECTOR, "button.pv-top-card-section__summary-toggle-button")))
-        Sum = driver.find_element_by_css_selector("button.pv-top-card-section__summary-toggle-button")
-        Sum.click()
-        _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CLASS_NAME, "pv-top-card-section__summary-text")))
         try:
-            self.summary = driver.find_element_by_class_name("pv-top-card-section__summary-text").text
+            _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CSS_SELECTOR, "button.pv-top-card-section__summary-toggle-button")))
+        except:
+            pass
+        else:
+            Sum = driver.find_element_by_css_selector("button.pv-top-card-section__summary-toggle-button")
+            Sum.click()
+
+        try:
+            _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CLASS_NAME, "pv-top-card-section__summary-text")))
         except:
             self.summary = ''
+        else:
+            self.summary = driver.find_element_by_class_name("pv-top-card-section__summary-text").text
         driver.execute_script("window.scrollTo(0, Math.ceil(document.body.scrollHeight/2));")
 
         _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, "experience-section")))
@@ -116,6 +122,7 @@ class Person(Scraper):
             _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, "experience-section")))
         except: 
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        
         exp = driver.find_element_by_id("experience-section")
         for position in exp.find_elements_by_class_name("pv-position-entity"):
             position_title = position.find_element_by_tag_name("h3").text.encode('utf-8').strip().decode('utf-8')
@@ -180,30 +187,34 @@ class Person(Scraper):
 
         driver.execute_script("window.scrollTo(0, Math.ceil(document.body.scrollHeight/1.5));")
 
-        _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, "education-section")))
-
-        # get education
-        edu = driver.find_element_by_id("education-section")
-        for school in edu.find_elements_by_class_name("pv-profile-section__sortable-item"):
-            edu_data = {}
-            edu_data['university'] = school.find_element_by_class_name("pv-entity__school-name").text.encode('utf-8').strip().decode('utf-8')
-            edu_data['degree'] = ''
-            try:
-                edu_data['degree'] = school.find_element_by_class_name("pv-entity__degree-name").text
-                edu_data['times'] = school.find_element_by_class_name("pv-entity__dates").text
-                if edu_data['times'].count('–') == 1:
-                    edu_data['from_date'], edu_data['to_date'] = times.split('–')
-                else:
-                    raise Exception('Invalid Date')
-            except:
-                edu_data['from_date'], edu_data['to_date'] = ('', '')
-            for i in edu_data.keys():
-                edu_data[i] = replace_symbols(edu_data[i])
-                if edu_data[i].count('\n') != 0:
-                    edu_data[i] = ','.join(edu_data[i].split('\n')[1:])    
-            education = Education(from_date =edu_data['from_date'], to_date = edu_data['to_date'], degree=edu_data['degree'],rawdata=edu_data)
-            education.institution_name = edu_data['university']
-            self.add_education(education)
+        try:
+            _ = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, "education-section")))
+        except:
+            pass
+        else:
+            # get education
+            edu = driver.find_element_by_id("education-section")
+            for school in edu.find_elements_by_class_name("pv-profile-section__sortable-item"):
+                edu_data = {}
+                edu_data['university'] = school.find_element_by_class_name("pv-entity__school-name").text.encode('utf-8').strip().decode('utf-8')
+                edu_data['degree'] = ''
+                try:
+                    edu_data['degree'] = school.find_element_by_class_name("pv-entity__degree-name").text
+                    edu_data['times'] = school.find_element_by_class_name("pv-entity__dates").text
+                    if edu_data['times'].count('–') == 1:
+                        edu_data['from_date'], edu_data['to_date'] = edu_data['times'].split('–')
+                    else:
+                        raise Exception('Invalid Date')
+                except:
+                    edu_data['from_date'], edu_data['to_date'] = ('', '')
+                for i in edu_data.keys():
+                    edu_data[i] = replace_symbols(edu_data[i])
+                    if edu_data[i].count('\n') != 0:
+                        edu_data[i] = ','.join(edu_data[i].split('\n')[1:])    
+                education = Education(from_date =edu_data['from_date'], to_date = edu_data['to_date'], degree=edu_data['degree'],rawdata=edu_data)
+                education.institution_name = edu_data['university']
+                self.add_education(education)
+       
         skill_list = ''
         tries = 0
         while skill_list == '' and tries < max_try:
@@ -215,9 +226,17 @@ class Person(Scraper):
             tries += 1
         print('Sleeping')        
         time.sleep(randint(1000,3000)/1000.0)
-        skill_list.find_element_by_css_selector('button[data-control-name="skill_details"]').click()
-        for skill in skill_list.find_elements_by_css_selector('p.pv-skill-category-entity__name > a[data-control-name="skills_endorsement_full_list"]' ):
-            self.add_skill(skill.text)
+        try:
+            skill_list.find_element_by_css_selector('button[data-control-name="skill_details"]').click()
+        except:
+            pass
+        else:
+            for skill in skill_list.find_elements_by_css_selector('p.pv-skill-category-entity__name > a[data-control-name="skills_endorsement_full_list"]' ):
+                self.add_skill(skill.text)
+        
+        
+        
+        # Close virtual driver
         if self.close_on_complete:
             driver.close()
 
