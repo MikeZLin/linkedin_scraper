@@ -180,6 +180,8 @@ class Person(Scraper):
 
             for i in exp_data.keys():
                 exp_data[i] = replace_symbols(exp_data[i])
+                if (i == 'desc'):
+                    continue
                 if exp_data[i].count('\n') != 0:
                     exp_data[i] = '<li>'.join(exp_data[i].split('\n')[1:])
 
